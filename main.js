@@ -125,25 +125,23 @@ export default class HeaderFooterPlugin extends Plugin {
   // }
 
   get header() {
-    return this.getSettings().headerTemplate || ''
+    return this.getSettings().header || ''
   }
 
   get footer() {
-    return this.getSettings().footerTemplate || ''
+    return this.getSettings().footer || ''
   }
 
   getSettingsSchema() {
     if (!this.settingSchema) {
       this.settingSchema = new Settings()
         .addProperty(
-          'headerTemplate',
-          new StringProperty().textEditor(true).setTitle('Header template')
-          // .setDescription('Quick add tags from card menu.')
+          'header',
+          new StringProperty().textEditor(true).setTitle('Header markdown')
         )
         .addProperty(
-          'footerTemplate',
-          new StringProperty().textEditor(true).setTitle('Footer template')
-          // .setDescription('Quick add tags from card menu.')
+          'footer',
+          new StringProperty().textEditor(true).setTitle('Footer markdown')
         )
     }
     return this.settingSchema
