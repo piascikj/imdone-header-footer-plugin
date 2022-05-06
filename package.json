@@ -2,7 +2,7 @@
   "name": "imdone-header-footer-plugin",
   "version": "0.1.0",
   "author": "Jesse Piascik",
-  "description": "A sample imdone plugin",
+  "description": "Add global headers and/or footers to your cards",
   "main": "bundle.js",
   "scripts": {
     "build": "rollup -c rollup.config.js"

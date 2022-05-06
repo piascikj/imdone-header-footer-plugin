@@ -59,7 +59,7 @@ var Plugin = /*@__PURE__*/getDefaultExportFromCjs(plugin.exports);
 var settings = {};
 
 Object.defineProperty(settings, "__esModule", { value: true });
-var Settings_1 = settings.Settings = ArrayProperty_1 = settings.ArrayProperty = settings.ArrayItems = StringProperty_1 = settings.StringProperty = settings.NumberProperty = settings.BooleanProperty = settings.Property = void 0;
+var Settings_1 = settings.Settings = settings.ArrayProperty = settings.ArrayItems = StringProperty_1 = settings.StringProperty = settings.NumberProperty = settings.BooleanProperty = settings.Property = void 0;
 class Property {
     constructor(type) {
         this.type = type;
@@ -185,7 +185,7 @@ class ArrayProperty extends Property {
         return this;
     }
 }
-var ArrayProperty_1 = settings.ArrayProperty = ArrayProperty;
+settings.ArrayProperty = ArrayProperty;
 class Settings {
     constructor() {
         this.properties = {};
@@ -198,156 +198,153 @@ class Settings {
 }
 Settings_1 = settings.Settings = Settings;
 
-class SamplePlugin extends Plugin {
+class HeaderFooterPlugin extends Plugin {
   constructor(project) {
     super(project);
   }
 
   onTaskUpdate(task) {
-    task.interpretedContent = task.interpretedContent.replace(
-      /- \[x\] (.*)$/gm,
-      (match, p1) => {
-        return `- [x] ~~${p1}~~`
-      }
-    );
+    console.log('***HEADER*** : ', this.header);
+    console.log('***FOOTER*** : ', this.footer);
+    task.interpretedContent =
+      task.interpretedContent = `${this.header}${task.interpretedContent}${this.footer}`;
   }
 
-  getCardProperties(task) {
-    const { source, line, totals } = task;
-    return {
-      date: new Date().toDateString(),
-      time: new Date().toLocaleTimeString(),
-      timestamp: new Date().toISOString(),
-      sourceLink: source && `[${source.path}:${line}](${source.path}:${line})`,
-    }
+  // getCardProperties(task) {
+  //   const { source, line, totals } = task
+  //   return {
+  //     date: new Date().toDateString(),
+  //     time: new Date().toLocaleTimeString(),
+  //     timestamp: new Date().toISOString(),
+  //     sourceLink: source && `[${source.path}:${line}](${source.path}:${line})`,
+  //   }
+  // }
+
+  // getBoardActions() {
+  //   const project = this.project
+  //   return [
+  //     {
+  //       name: 'Filter for urgent cards',
+  //       action: () => {
+  //         project.setFilter('allTags = urgent')
+  //       },
+  //     },
+  //     {
+  //       name: 'Add a card in TODO',
+  //       action: () => {
+  //         project.newCard({ list: 'TODO' })
+  //       },
+  //     },
+  //     {
+  //       name: 'Test snackBar',
+  //       action: () => {
+  //         project.snackBar({ message: 'Testing snackBar' })
+  //       },
+  //     },
+  //     {
+  //       name: 'Test toast',
+  //       action: () => {
+  //         project.toast({ message: 'Testing toast' })
+  //       },
+  //     },
+  //   ]
+  // }
+
+  // getCardActions(task) {
+  //   return [
+  //     ...this.getTagActions(task),
+  //     ...this.getMetaActions(task),
+  //     {
+  //       action: () => {
+  //         console.log('**task.desc**:', task.desc)
+  //         this.project.copyToClipboard(
+  //           task.desc.rawMarkdown,
+  //           'Markdown copied to clipboard!'
+  //         )
+  //       },
+  //       icon: 'markdown',
+  //       pack: 'fab',
+  //       title: 'Copy markdown',
+  //     },
+  //     {
+  //       action: () => {
+  //         this.project.copyToClipboard(
+  //           task.desc.html,
+  //           'HTML copied to clipboard!'
+  //         )
+  //       },
+  //       icon: 'copy',
+  //       pack: 'fas',
+  //       title: 'Copy html',
+  //     },
+  //   ]
+  // }
+
+  // getMetaActions(task) {
+  //   return this.getMeta()
+  //     .filter(
+  //       ({ key, value }) =>
+  //         !(task.allMeta[key] && task.allMeta[key].includes(value))
+  //     )
+  //     .map(({ key, value }) => {
+  //       return {
+  //         action: () => {
+  //           this.project.addMetadata(task, key, value)
+  //         },
+  //         icon: 'table',
+  //         pack: 'fas',
+  //         title: `Add metadata ${key} = ${value}`,
+  //       }
+  //     })
+  // }
+
+  // getTagActions(task) {
+  //   return this.getTags()
+  //     .filter(({ name }) => !task.allTags.includes(name))
+  //     .map(({ name }) => {
+  //       return {
+  //         action: () => {
+  //           this.project.addTag(task, name)
+  //         },
+  //         icon: 'tag',
+  //         pack: 'fas',
+  //         title: `Add ${name} tag`,
+  //       }
+  //     })
+  // }
+
+  // getTags() {
+  //   return this.getSettings().tags || []
+  // }
+
+  // getMeta() {
+  //   return this.getSettings().meta || []
+  // }
+
+  get header() {
+    return this.getSettings().headerTemplate || ''
   }
 
-  getBoardActions() {
-    const project = this.project;
-    return [
-      {
-        name: 'Filter for urgent cards',
-        action: () => {
-          project.setFilter('allTags = urgent');
-        },
-      },
-      {
-        name: 'Add a card in TODO',
-        action: () => {
-          project.newCard({ list: 'TODO' });
-        },
-      },
-      {
-        name: 'Test snackBar',
-        action: () => {
-          project.snackBar({ message: 'Testing snackBar' });
-        },
-      },
-      {
-        name: 'Test toast',
-        action: () => {
-          project.toast({ message: 'Testing toast' });
-        },
-      },
-    ]
-  }
-
-  getCardActions(task) {
-    return [
-      ...this.getTagActions(task),
-      ...this.getMetaActions(task),
-      {
-        action: () => {
-          console.log('**task.desc**:', task.desc);
-          this.project.copyToClipboard(
-            task.desc.rawMarkdown,
-            'Markdown copied to clipboard!'
-          );
-        },
-        icon: 'markdown',
-        pack: 'fab',
-        title: 'Copy markdown',
-      },
-      {
-        action: () => {
-          this.project.copyToClipboard(
-            task.desc.html,
-            'HTML copied to clipboard!'
-          );
-        },
-        icon: 'copy',
-        pack: 'fas',
-        title: 'Copy html',
-      },
-    ]
-  }
-
-  getMetaActions(task) {
-    return this.getMeta()
-      .filter(
-        ({ key, value }) =>
-          !(task.allMeta[key] && task.allMeta[key].includes(value))
-      )
-      .map(({ key, value }) => {
-        return {
-          action: () => {
-            this.project.addMetadata(task, key, value);
-          },
-          icon: 'table',
-          pack: 'fas',
-          title: `Add metadata ${key} = ${value}`,
-        }
-      })
-  }
-
-  getTagActions(task) {
-    return this.getTags()
-      .filter(({ name }) => !task.allTags.includes(name))
-      .map(({ name }) => {
-        return {
-          action: () => {
-            this.project.addTag(task, name);
-          },
-          icon: 'tag',
-          pack: 'fas',
-          title: `Add ${name} tag`,
-        }
-      })
-  }
-
-  getTags() {
-    return this.getSettings().tags || []
-  }
-
-  getMeta() {
-    return this.getSettings().meta || []
+  get footer() {
+    return this.getSettings().footerTemplate || ''
   }
 
   getSettingsSchema() {
     if (!this.settingSchema) {
       this.settingSchema = new Settings_1()
         .addProperty(
-          'tags',
-          new ArrayProperty_1()
-            .itemsDraggable(true)
-            .setTitle('Tags')
-            .setDescription('Quick add tags from card menu.')
-            .itemTitle('Tag')
-            .addItemProperty('name', new StringProperty_1().setTitle('Name'))
+          'headerTemplate',
+          new StringProperty_1().textEditor(true).setTitle('Header template')
+          // .setDescription('Quick add tags from card menu.')
         )
         .addProperty(
-          'meta',
-          new ArrayProperty_1()
-            .itemsDraggable(true)
-            .setTitle('Metadata')
-            .setDescription('Quick set metadata from card menu.')
-            .itemTitle('Key, value pair')
-            .addItemProperty('key', new StringProperty_1().setTitle('Key'))
-            .addItemProperty('value', new StringProperty_1().setTitle('Value'))
+          'footerTemplate',
+          new StringProperty_1().textEditor(true).setTitle('Footer template')
+          // .setDescription('Quick add tags from card menu.')
         );
     }
     return this.settingSchema
   }
 }
 
-module.exports = SamplePlugin;
+module.exports = HeaderFooterPlugin;
