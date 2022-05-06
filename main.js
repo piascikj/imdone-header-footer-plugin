@@ -1,14 +1,17 @@
 import Plugin from 'imdone-api'
 import { Settings, StringProperty } from 'imdone-api/lib/settings'
 
+const HEADER_FOOTER_COMMENT = '<!-- imdone-header-footer -->\n'
+
 export default class HeaderFooterPlugin extends Plugin {
   constructor(project) {
     super(project)
   }
 
   onTaskUpdate(task) {
+    if (task.interpretedContent.includes(HEADER_FOOTER_COMMENT)) return
     task.interpretedContent =
-      task.interpretedContent = `${this.header}${task.interpretedContent}${this.footer}`
+      task.interpretedContent = `${HEADER_FOOTER_COMMENT}${this.header}${task.interpretedContent}${this.footer}`
   }
 
   get header() {
