@@ -228,8 +228,16 @@ class HeaderFooterPlugin extends Plugin {
 
   onTaskUpdate(task) {
     if (task.interpretedContent.includes(HEADER_FOOTER_COMMENT)) return
+    if (this.afterPrefix) {
+      task.interpretedContent = task.interpretedContent.replace(task.text, `${this.afterPrefix}${task.text}`);
+    }
+
     task.interpretedContent =
       task.interpretedContent = `${HEADER_FOOTER_COMMENT}${this.header}${task.interpretedContent}${this.footer}`;
+  }
+
+  get afterPrefix() {
+    return this.getSettings().afterPrefix || ''
   }
 
   get header() {
@@ -246,6 +254,10 @@ class HeaderFooterPlugin extends Plugin {
         .addProperty(
           'header',
           new StringProperty_1().textEditor(true).setTitle('Header markdown')
+        )
+        .addProperty(
+          'afterPrefix',
+          new StringProperty_1().textEditor(true).setTitle('After prefix markdown')
         )
         .addProperty(
           'footer',
