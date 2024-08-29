@@ -232,12 +232,20 @@ class HeaderFooterPlugin extends Plugin {
       task.interpretedContent = task.interpretedContent.replace(task.text, `${this.afterPrefix}${task.text}`);
     }
 
+    if (this.afterTitle) {
+      task.interpretedContent = task.interpretedContent.replace(task.text, `${task.text}${this.afterTitle}`);
+    }
+
     task.interpretedContent =
       task.interpretedContent = `${HEADER_FOOTER_COMMENT}${this.header}${task.interpretedContent}${this.footer}`;
   }
 
   get afterPrefix() {
     return this.getSettings().afterPrefix || ''
+  }
+
+  get afterTitle() {
+    return this.getSettings().afterTitle || ''
   }
 
   get header() {
@@ -258,6 +266,10 @@ class HeaderFooterPlugin extends Plugin {
         .addProperty(
           'afterPrefix',
           new StringProperty_1().textEditor(true).setTitle('After prefix markdown')
+        )
+        .addProperty(
+          'afterTitle',
+          new StringProperty_1().textEditor(true).setTitle('After title markdown')
         )
         .addProperty(
           'footer',
