@@ -25,7 +25,23 @@ class Plugin {
         this.project = project;
         this.unimplWarning = {};
     }
+    static get pluginName() {
+        return 'Plugin';
+    }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.unimplemented('init()');
+        });
+    }
+    /**
+     * Destroys the plugin instance.
+     */
     destroy() { }
+    /**
+     * Hook that is called before a task is added.
+     * @param {OnBeforeAddTaskRequest} request - The request object containing task details.
+     * @returns {Promise<OnBeforeAddTaskResponse>} - The response object containing task details.
+     */
     onBeforeAddTask(request) {
         return __awaiter(this, void 0, void 0, function* () {
             this.unimplemented('onBeforeAddTask()');
@@ -33,41 +49,104 @@ class Plugin {
             return { path, content, meta, tags, contexts };
         });
     }
+    /**
+     * Hook that is called before the board is updated.
+     */
     onBeforeBoardUpdate() {
-        this.unimplemented('onBeforeBoardUpdate()');
+        return __awaiter(this, void 0, void 0, function* () {
+            this.unimplemented('onBeforeBoardUpdate()');
+        });
     }
+    /**
+     * Hook that is called when the board is updated.
+     * @param {Array<List>} lists - The updated lists.
+     */
     onBoardUpdate(lists) {
-        this.unimplemented('onBoardUpdate(lists: Array<List>)');
+        return __awaiter(this, void 0, void 0, function* () {
+            this.unimplemented('onBoardUpdate(lists: Array<List>)');
+        });
     }
+    /**
+     * Hook that is called when a task is updated.
+     * @param {Task} task - The updated task.
+     */
     onTaskUpdate(task) {
         this.unimplemented('onTaskUpdate(task: Task)');
     }
+    /**
+     * Hook that is called when a task is found.
+     * @param {Task} task - The found task.
+     * @returns {Promise<void>}
+     */
+    onTaskFound(task) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.unimplemented('onTaskFound(task: Task)');
+        });
+    }
+    /**
+     * Hook that is called after a task is deleted.
+     * @param {Task} task - The deleted task.
+     */
     onAfterDeleteTask(task) {
         this.unimplemented('onAfterDeleteTask(task: Task)');
     }
+    /**
+     * Gets the properties of a card.
+     * @param {Task} task - The task associated with the card.
+     * @returns {Object} - The card properties.
+     */
     getCardProperties(task) {
         this.unimplemented('getCardProperties(task: Task)');
         return {};
     }
+    /**
+     * Gets the properties of the board.
+     * @returns {Promise<Object>} - The board properties.
+     */
+    getBoardProperties() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.unimplemented('getBoardProperties()');
+            return {};
+        });
+    }
+    /**
+     * Gets the actions available for a card.
+     * @param {Task} task - The task associated with the card.
+     * @returns {Array<CardAction>} - The card actions.
+     */
     getCardActions(task) {
         this.unimplemented('getCardActions(task: Task)');
         return [];
     }
+    /**
+     * Gets the actions available for the board.
+     * @returns {Array<BoardAction>} - The board actions.
+     */
     getBoardActions() {
         this.unimplemented('getBoardActions()');
         return [];
     }
+    /**
+     * Gets the settings schema.
+     * @returns {Settings} - The settings schema.
+     */
     getSettingsSchema() {
         this.unimplemented('getSettingsSchema()');
         return null;
     }
+    /**
+     * Gets the settings.
+     * @returns {any} - The settings.
+     */
     getSettings() {
         return null;
     }
     unimplemented(signature) {
         if (this.unimplWarning[signature])
             return;
-        console.info(`${this.constructor.name}.${signature} is not implemented.`);
+        if (this.project.config.devMode) {
+            console.info(`${this.constructor.name}.${signature} is not implemented.`);
+        }
         this.unimplWarning[signature] = true;
     }
 }
@@ -81,96 +160,117 @@ var settings = {};
 
 Object.defineProperty(settings, "__esModule", { value: true });
 var Settings_1 = settings.Settings = settings.ArrayProperty = settings.ArrayItems = StringProperty_1 = settings.StringProperty = settings.NumberProperty = settings.BooleanProperty = settings.Property = void 0;
+/**
+ * Represents a generic property with a title, description, and type.
+ */
 class Property {
     constructor(type) {
         this.type = type;
     }
+    /**
+     * Sets the title of the property.
+     */
     setTitle(title) {
         this.title = title;
         return this;
     }
+    /**
+     * Sets the description of the property.
+     */
     setDescription(description) {
         this.description = description;
         return this;
     }
 }
 settings.Property = Property;
+/**
+ * Represents a boolean property with a default value.
+ */
 class BooleanProperty extends Property {
     constructor() {
         super('boolean');
     }
+    /**
+     * Sets the default value of the boolean property.
+     */
     setDefault(_default) {
         this.default = _default;
-        return this;
-    }
-    setTitle(title) {
-        this.title = title;
-        return this;
-    }
-    setDescription(description) {
-        this.description = description;
         return this;
     }
 }
 settings.BooleanProperty = BooleanProperty;
+/**
+ * Represents a numeric property with optional constraints.
+ */
 class NumberProperty extends Property {
     constructor() {
         super('number');
     }
+    /**
+     * Sets the minimum value constraint.
+     */
     setMinimum(min) {
         this.minimum = min;
         return this;
     }
+    /**
+     * Sets the maximum value constraint.
+     */
     setMaximum(max) {
         this.maximum = max;
         return this;
     }
+    /**
+     * Sets the default value.
+     */
     setDefault(_default) {
         this.default = _default;
         return this;
     }
-    setTitle(title) {
-        this.title = title;
-        return this;
-    }
-    setDescription(description) {
-        this.description = description;
-        return this;
-    }
 }
 settings.NumberProperty = NumberProperty;
+/**
+ * Represents a string property with optional constraints.
+ */
 class StringProperty extends Property {
     constructor() {
         super('string');
         this.editor = false;
         this.required = false;
     }
+    /**
+     * Sets the default value of the string property.
+     */
     setDefault(_default) {
         this.default = _default;
         return this;
     }
+    /**
+     * Defines allowed values for the string property.
+     */
     allowedValues(_enum) {
         this.enum = _enum;
         return this;
     }
+    /**
+     * Enables or disables the text editor for this property.
+     */
     textEditor(enable) {
         this.editor = enable;
         return this;
     }
+    /**
+     * Marks the string property as required.
+     */
     setRequired(required) {
         this.required = required;
         return this;
     }
-    setTitle(title) {
-        this.title = title;
-        return this;
-    }
-    setDescription(description) {
-        this.description = description;
-        return this;
-    }
 }
 var StringProperty_1 = settings.StringProperty = StringProperty;
+/**
+ * Represents an item in an array property with associated metadata.
+ */
 class ArrayItems {
     constructor() {
         this.properties = {};
@@ -180,38 +280,48 @@ class ArrayItems {
     }
 }
 settings.ArrayItems = ArrayItems;
+/**
+ * Represents an array property with defined item structure.
+ */
 class ArrayProperty extends Property {
     constructor() {
         super('array');
         this.items = new ArrayItems();
     }
+    /**
+     * Sets the title for the items in the array.
+     */
     itemTitle(title) {
         this.items.title = title;
         return this;
     }
+    /**
+     * Enables or disables draggable items in the array.
+     */
     itemsDraggable(draggable) {
         this.items.draggable = draggable;
         return this;
     }
+    /**
+     * Adds a property to the array items.
+     */
     addItemProperty(name, property) {
         this.items.properties[name] = property;
         return this;
     }
-    setTitle(title) {
-        this.title = title;
-        return this;
-    }
-    setDescription(description) {
-        this.description = description;
-        return this;
-    }
 }
 settings.ArrayProperty = ArrayProperty;
+/**
+ * Represents application settings with configurable properties.
+ */
 class Settings {
     constructor() {
         this.properties = {};
         this.type = 'object';
     }
+    /**
+     * Adds a new property to the settings configuration.
+     */
     addProperty(name, property) {
         this.properties[name] = property;
         return this;
