@@ -3,6 +3,10 @@
   "version": "0.1.1",
   "author": "Jesse Piascik",
   "description": "Add global headers and/or footers to your cards",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piascikj/imdone-header-footer-plugin.git"
+  },
   "main": "bundle.js",
   "scripts": {
     "build": "rollup -c rollup.config.js"
