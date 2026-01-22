@@ -226,6 +226,10 @@ class HeaderFooterPlugin extends Plugin {
     super(project);
   }
 
+  static get pluginName() {
+    return 'HeaderFooterPlugin'
+  }
+
   onTaskUpdate(task) {
     if (task.interpretedContent.includes(HEADER_FOOTER_COMMENT)) return
     if (this.afterPrefix) {
