@@ -1,6 +1,6 @@
 {
   "name": "imdone-header-footer-plugin",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Jesse Piascik",
   "description": "Add global headers and/or footers to your cards",
   "repository": {
